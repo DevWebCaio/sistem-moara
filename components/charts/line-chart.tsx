@@ -6,7 +6,6 @@ import {
   type ChartConfig,
   ChartContainer,
   ChartLegend,
-  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
@@ -39,7 +38,7 @@ export function LineChart({ data, categories, index, chartConfig }: LineChartPro
         />
         <YAxis tickLine={false} axisLine={false} tickMargin={8} tickFormatter={(value) => `${value}`} />
         <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-        <ChartLegend content={<ChartLegendContent />} />
+        <ChartLegend />
         {categories.map((category) => (
           <Line
             key={category}

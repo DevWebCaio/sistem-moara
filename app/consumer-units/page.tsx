@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Table, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Plus, Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
@@ -65,4 +65,32 @@ export default function ConsumerUnitsPage() {
                     <TableHead>ID</TableHead>
                     <TableHead>Nome</TableHead>
                     <TableHead>Endereço</TableHead>
-                    <Table\
+                    <TableHead>Cidade</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Ações</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {consumerUnits.map((unit) => (
+                    <TableRow key={unit.id}>
+                      <TableCell className="font-medium">{unit.id}</TableCell>
+                      <TableCell>{unit.name}</TableCell>
+                      <TableCell>{unit.address}</TableCell>
+                      <TableCell>{unit.city}</TableCell>
+                      <TableCell>{unit.status}</TableCell>
+                      <TableCell className="text-right">
+                        <Button variant="ghost" size="sm">
+                          Ver Detalhes
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </MainLayout>
+  )
+}
