@@ -1,254 +1,221 @@
 # Solar DG Platform
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). The project aims to replicate the core functionalities and UI of the Wattio platform, focusing on distributed solar energy management.
+Sistema completo de gestão para energia solar distribuída com faturamento Stripe, monitoramento SOLARMAN e gestão de créditos energéticos.
 
-## Project Structure
+## 🚀 Funcionalidades Principais
 
-The project is built with Next.js using the App Router and leverages shadcn/ui for its component library.
+### ✅ Faturamento com Stripe
+- Processamento automático de faturas
+- Integração com créditos energéticos
+- Envio de faturas por email
+- Dashboard de pagamentos
 
-- `app/`: Contains the main application routes and pages.
-  - `auth/`: Authentication related pages (e.g., login).
-  - `consumer-units/`: Pages for managing consumer units.
-  - `contracts/`: Pages for managing contracts.
-  - `crm/`: Customer Relationship Management pages.
-  - `dashboard/`: The main dashboard overview.
-  - `energy-vault/`: Pages for energy data management, including upload and testing.
-  - `financial/`: Financial overview and reporting.
-  - `invoices/`: Invoice management.
-  - `power-plants/`: Pages for managing power plants, including forms.
-  - `reports/`: Various reports and analytics.
-  - `settings/`: Application settings.
-- `components/`: Reusable React components.
-  - `layout/`: Layout components like `main-layout.tsx`, `sidebar.tsx`, `header.tsx`.
-  - `power-plants/`: Components specific to power plant management.
-  - `ui/`: Shadcn/ui components (accordion, alert, avatar, button, card, etc.).
-- `hooks/`: Custom React hooks (e.g., `use-mobile.ts`, `use-toast.ts`).
-- `lib/`: Utility functions and configurations (e.g., `utils.ts`, `supabase.ts`, `supabase-types.ts`).
-- `scripts/`: SQL scripts for database schema creation and data seeding.
-- `public/`: Static assets like images.
-- `styles/`: Global CSS.
-- `tailwind.config.ts`: Tailwind CSS configuration.
-- `next.config.mjs`: Next.js configuration.
-- `package.json`: Project dependencies and scripts.
-- `tsconfig.json`: TypeScript configuration.
+### ✅ Gestão de Créditos Energéticos
+- Cofre energético por cliente
+- Rastreamento de transações
+- Cálculo automático de créditos
+- Histórico detalhado
 
-## Features
+### ✅ Monitoramento SOLARMAN
+- Dados em tempo real dos inversores
+- Status de usinas (online/offline)
+- Métricas de eficiência
+- Alertas automáticos
 
-- **Dashboard**: Overview of active power plants, total production, generated savings, recent alerts, and quick actions.
-- **Energy Vault**: Manage energy data, including upload and testing functionalities.
-- **Financials**: Track financial performance.
-- **Invoices**: Manage and view invoices.
-- **Reports**: Generate various reports.
-- **Settings**: Configure application settings.
-- **Consumer Units**: Manage individual consumer units.
-- **Contracts**: Handle contract details.
-- **CRM**: Customer relationship management.
-- **Authentication**: Login page.
-- **Responsive Design**: Adapts to different screen sizes.
-- **Theming**: Configurable theme using CSS variables.
-- **Database Integration**: Placeholder for Supabase integration with SQL scripts for schema management.
+### ✅ Gestão Completa
+- Usinas Solares
+- Unidades Consumidoras
+- Contratos
+- CRM
+- Financeiro
+- Relatórios
 
-## Getting Started
+## 🛠️ Tech Stack
 
-### Local Development
+- **Frontend**: Next.js 14, React 18, TypeScript
+- **UI**: TailwindCSS, ShadCN/UI, Radix UI
+- **Faturamento**: Stripe
+- **Monitoramento**: SOLARMAN API
+- **Banco**: Supabase (PostgreSQL)
+- **Deploy**: Vercel
+- **PWA**: Progressive Web App
 
-First, run the development server:
+## 📦 Instalação
 
-\`\`\`bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-\`\`\`
+### Pré-requisitos
+- Node.js 18+
+- npm ou pnpm
+- Conta Stripe
+- Conta SOLARMAN
+- Conta Vercel (para deploy)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-### Deploy to Vercel
-
-This project is configured for easy deployment on Vercel:
-
-1. **Push to GitHub**: Ensure your code is in a GitHub repository
-2. **Connect to Vercel**: 
-   - Go to [vercel.com](https://vercel.com)
-   - Import your GitHub repository
-   - Vercel will automatically detect Next.js
-3. **Environment Variables** (Optional):
-   - Add `NEXT_PUBLIC_DEMO_MODE=true` for demo mode
-   - Add Supabase credentials if you want to connect to a database
-4. **Deploy**: Click deploy and your app will be live!
-
-**Demo Mode**: The app works with mock data by default. Set `NEXT_PUBLIC_DEMO_MODE=true` to ensure it runs without database connection.
-
-## 🚀 Quick Start
-
-### Prerequisites
-- Node.js 18+ 
-- npm, yarn, or pnpm
-
-### Installation
+### 1. Clone o repositório
 ```bash
-# Clone the repository
 git clone https://github.com/DevWebCaio/sistem-moara.git
 cd sistem-moara
+```
 
-# Install dependencies
+### 2. Instale as dependências
+```bash
 npm install
+```
 
-# Start development server
+### 3. Configure as variáveis de ambiente
+```bash
+cp env.example .env.local
+```
+
+Edite o arquivo `.env.local` com suas credenciais:
+
+```env
+# Configurações da Aplicação
+NEXT_PUBLIC_APP_NAME=Solar DG Platform
+NEXT_PUBLIC_APP_URL=https://your-app.vercel.app
+
+# Demo Mode (true para desenvolvimento, false para produção)
+NEXT_PUBLIC_DEMO_MODE=true
+
+# Stripe Configuration
+STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_your_stripe_publishable_key
+STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
+
+# SOLARMAN Configuration
+SOLARMAN_API_URL=https://api.solarmanpv.com
+SOLARMAN_APP_ID=your_solarman_app_id
+SOLARMAN_APP_SECRET=your_solarman_app_secret
+SOLARMAN_USERNAME=your_solarman_username
+SOLARMAN_PASSWORD=your_solarman_password
+
+# Email Configuration
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your_email@gmail.com
+SMTP_PASS=your_app_password
+```
+
+### 4. Execute o projeto
+```bash
 npm run dev
 ```
 
-### Build for Production
-```bash
-# Build the application
-npm run build
+Acesse: http://localhost:3000
 
-# Start production server
-npm start
+## 🚀 Deploy para Produção
+
+### 1. Preparação para Produção
+
+1. **Configure as credenciais reais**:
+   - Stripe (chaves live)
+   - SOLARMAN (credenciais de produção)
+   - Email (SMTP de produção)
+
+2. **Desative o modo demo**:
+   ```env
+   NEXT_PUBLIC_DEMO_MODE=false
+   ```
+
+3. **Configure o domínio**:
+   ```env
+   NEXT_PUBLIC_APP_URL=https://your-domain.vercel.app
+   ```
+
+### 2. Deploy na Vercel
+
+#### Opção A: Deploy Automático (Recomendado)
+1. Conecte seu repositório GitHub à Vercel
+2. Configure as variáveis de ambiente na Vercel
+3. Deploy automático a cada push para `main`
+
+#### Opção B: Deploy Manual
+```bash
+# Instale o Vercel CLI
+npm install -g vercel
+
+# Login na Vercel
+vercel login
+
+# Deploy
+vercel --prod
+```
+
+### 3. Configuração de Variáveis na Vercel
+
+Configure estas variáveis no painel da Vercel:
+
+**Obrigatórias:**
+- `NEXT_PUBLIC_DEMO_MODE` = `false`
+- `STRIPE_SECRET_KEY` = sua chave live do Stripe
+- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` = sua chave pública live do Stripe
+
+**Opcionais (se usar):**
+- `SOLARMAN_*` = credenciais do SOLARMAN
+- `SMTP_*` = configurações de email
+- `SUPABASE_*` = configurações do Supabase
+
+## 🔧 Scripts Disponíveis
+
+```bash
+# Desenvolvimento
+npm run dev          # Servidor de desenvolvimento
+npm run build        # Build de produção
+npm run start        # Servidor de produção
+npm run lint         # Verificação de código
+
+# Deploy
+npm run vercel-build # Build para Vercel
 ```
 
 ## 📱 PWA Features
 
-This application is configured as a Progressive Web App (PWA) with:
-- ✅ Offline support
-- ✅ Installable on mobile devices
-- ✅ App-like experience
-- ✅ Fast loading times
+- ✅ Instalável como app
+- ✅ Funciona offline
+- ✅ Push notifications
+- ✅ Splash screen
+- ✅ Ícones adaptativos
 
-## 🔧 Development
+## 🔒 Segurança
 
-### Available Scripts
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint
+- ✅ HTTPS obrigatório
+- ✅ Headers de segurança
+- ✅ Validação de dados
+- ✅ Sanitização de inputs
+- ✅ Rate limiting
 
-### Project Structure
-```
-SISTEM-MOARA/
-├── app/                    # Next.js App Router pages
-├── components/             # Reusable React components
-├── lib/                   # Utilities and configurations
-├── public/                # Static assets
-└── scripts/               # Database scripts
-```
+## 📊 Monitoramento
 
-## 🎯 Features
-
-- **Dashboard**: Overview with key metrics and charts
-- **Power Plants**: Manage solar power plants
-- **Consumer Units**: Track energy consumption units
-- **Contracts**: Manage client contracts
-- **CRM**: Customer relationship management
-- **Energy Vault**: Data storage and management
-- **Financial**: Financial tracking and reporting
-- **Invoices**: Invoice management
-- **Reports**: Generate detailed reports
-- **Settings**: Application configuration
-
-## 🛠️ Tech Stack
-
-- **Framework**: Next.js 14 (App Router)
-- **Language**: TypeScript
-- **Styling**: TailwindCSS + ShadCN/UI
-- **Database**: Supabase (PostgreSQL)
-- **Authentication**: Supabase Auth
-- **Charts**: Recharts
-- **Forms**: React Hook Form + Zod
-- **Deployment**: Vercel
-
-## 📊 Performance
-
-- ✅ Lighthouse Score: 95+
-- ✅ Core Web Vitals: Optimized
-- ✅ Bundle Size: Optimized
-- ✅ Loading Speed: < 2s
-
-## 🔒 Security
-
-- ✅ HTTPS enforced
-- ✅ Security headers configured
-- ✅ XSS protection enabled
-- ✅ Content Security Policy
-
-## 📈 Monitoring
-
-- ✅ Error tracking ready
-- ✅ Performance monitoring
-- ✅ Analytics integration ready
+- ✅ Logs estruturados
+- ✅ Métricas de performance
+- ✅ Error tracking
 - ✅ Uptime monitoring
 
-## 🤝 Contributing
+## 🤝 Contribuição
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+1. Fork o projeto
+2. Crie uma branch: `git checkout -b feature/nova-funcionalidade`
+3. Commit: `git commit -m 'feat: adiciona nova funcionalidade'`
+4. Push: `git push origin feature/nova-funcionalidade`
+5. Abra um Pull Request
 
-## 📄 License
+## 📄 Licença
 
-This project is licensed under the MIT License.
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🆘 Suporte
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- **Issues**: [GitHub Issues](https://github.com/DevWebCaio/sistem-moara/issues)
+- **Documentação**: [Wiki do Projeto](https://github.com/DevWebCaio/sistem-moara/wiki)
+- **Email**: suporte@solar-dg.com
 
-To run this project locally, follow these steps:
+## 🎯 Roadmap
 
-1.  **Clone the repository:**
-    \`\`\`bash
-    git clone [repository-url]
-    cd wattio-clone-project
-    \`\`\`
+- [ ] Integração com mais provedores de energia
+- [ ] Dashboard avançado de analytics
+- [ ] API pública para terceiros
+- [ ] App mobile nativo
+- [ ] Machine Learning para previsões
+- [ ] Blockchain para créditos energéticos
 
-2.  **Install dependencies:**
-    \`\`\`bash
-    npm install
-    # or
-    yarn install
-    # or
-    pnpm install
-    \`\`\`
+---
 
-3.  **Set up environment variables:**
-    Create a `.env.local` file in the root directory and add your environment variables. For Supabase integration, you would typically add:
-    \`\`\`
-    NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-    SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
-    \`\`\`
-    (Note: The current project uses mock data and does not fully implement Supabase integration, but the structure is in place.)
-
-4.  **Run database scripts (Optional, for Supabase integration):**
-    If you are setting up a Supabase database, you can use the provided SQL scripts.
-    For example, to create the initial schema:
-    \`\`\`bash
-    # You would typically run these via a Supabase CLI or dashboard
-    # Example: psql -h [your-db-host] -U postgres -f scripts/create-complete-database-schema.sql
-    \`\`\`
-
-## Customization
-
--   **Theming**: Adjust the CSS variables in `app/globals.css` and `tailwind.config.ts` to customize the application's theme.
--   **Components**: Modify existing shadcn/ui components or create new ones in the `components/ui` directory.
--   **Layout**: Adjust `components/layout/main-layout.tsx`, `components/layout/sidebar.tsx`, and `components/layout/header.tsx` to change the overall application layout.
--   **Data**: The project currently uses mock data. You can integrate with a backend (e.g., Supabase) by modifying the data fetching logic in the respective pages and components.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+**Desenvolvido com ❤️ para o futuro da energia solar**
