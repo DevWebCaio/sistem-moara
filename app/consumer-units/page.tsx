@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button"
 import { Plus, Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { MainLayout } from "@/components/layout/main-layout"
+import ConsumerUnitForm from "@/components/consumer-units/consumer-unit-form"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 
 export default function ConsumerUnitsPage() {
   const consumerUnits = [
@@ -40,10 +42,20 @@ export default function ConsumerUnitsPage() {
               Gerencie as unidades consumidoras conectadas às suas usinas.
             </p>
           </div>
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Adicionar Nova Unidade
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                Adicionar Nova Unidade
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[600px]">
+              <DialogHeader>
+                <DialogTitle>Adicionar Nova Unidade Consumidora</DialogTitle>
+              </DialogHeader>
+              <ConsumerUnitForm />
+            </DialogContent>
+          </Dialog>
         </div>
 
         <Card>

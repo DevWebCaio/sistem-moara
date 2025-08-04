@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Plus, Search } from "lucide-react"
+import TransactionForm from "@/components/financial/transaction-form"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 
 export default function FinancialPage() {
   const transactions = [
@@ -29,10 +31,20 @@ export default function FinancialPage() {
               Acompanhe todas as transações financeiras da sua operação.
             </p>
           </div>
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Registrar Nova Transação
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                Registrar Nova Transação
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[600px]">
+              <DialogHeader>
+                <DialogTitle>Registrar Nova Transação</DialogTitle>
+              </DialogHeader>
+              <TransactionForm />
+            </DialogContent>
+          </Dialog>
         </div>
 
         <Card>

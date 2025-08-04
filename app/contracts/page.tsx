@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Plus, Search, FileText } from "lucide-react"
+import ContractForm from "@/components/contracts/contract-form"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 
 export default function ContractsPage() {
   const contracts = [
@@ -51,10 +53,20 @@ export default function ContractsPage() {
               Gerencie todos os contratos com clientes e fornecedores.
             </p>
           </div>
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Adicionar Novo Contrato
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                Adicionar Novo Contrato
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[600px]">
+              <DialogHeader>
+                <DialogTitle>Adicionar Novo Contrato</DialogTitle>
+              </DialogHeader>
+              <ContractForm />
+            </DialogContent>
+          </Dialog>
         </div>
 
         <Card>

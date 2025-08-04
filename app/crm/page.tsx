@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Plus, Search } from "lucide-react"
+import ClientForm from "@/components/crm/client-form"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 
 export default function CRMPage() {
   const clients = [
@@ -27,10 +29,20 @@ export default function CRMPage() {
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Gestão de Clientes (CRM)</h1>
             <p className="text-gray-600 mt-2 text-sm sm:text-base">Gerencie seus clientes, leads e interações.</p>
           </div>
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Adicionar Novo Cliente
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                Adicionar Novo Cliente
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[600px]">
+              <DialogHeader>
+                <DialogTitle>Adicionar Novo Cliente</DialogTitle>
+              </DialogHeader>
+              <ClientForm />
+            </DialogContent>
+          </Dialog>
         </div>
 
         <Card>

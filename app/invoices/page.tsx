@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Plus, Search } from "lucide-react"
+import InvoiceForm from "@/components/invoices/invoice-form"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 
 export default function InvoicesPage() {
   const invoices = [
@@ -23,10 +25,20 @@ export default function InvoicesPage() {
               Gerencie todas as faturas geradas para seus clientes.
             </p>
           </div>
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Gerar Nova Fatura
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                Gerar Nova Fatura
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[600px]">
+              <DialogHeader>
+                <DialogTitle>Gerar Nova Fatura</DialogTitle>
+              </DialogHeader>
+              <InvoiceForm />
+            </DialogContent>
+          </Dialog>
         </div>
 
         <Card>
