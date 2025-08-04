@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-import { Button } from "@/components/ui/button"
+import { LoadingButton } from "@/components/ui/loading-button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -27,6 +27,7 @@ const formSchema = z.object({
 
 export default function PowerPlantForm() {
   const { toast } = useToast()
+  const [isLoading, setIsLoading] = React.useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -39,14 +40,28 @@ export default function PowerPlantForm() {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
-    toast({
-      title: "Usina Cadastrada!",
-      description: `A usina "${values.name}" foi cadastrada com sucesso.`,
-      variant: "success",
-    })
-    form.reset()
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true)
+    try {
+      // Simular delay de API
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      console.log(values)
+      toast({
+        title: "Usina Cadastrada!",
+        description: `A usina "${values.name}" foi cadastrada com sucesso.`,
+        variant: "success",
+      })
+      form.reset()
+    } catch (error) {
+      toast({
+        title: "Erro!",
+        description: "Erro ao cadastrar usina. Tente novamente.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -126,9 +141,9 @@ export default function PowerPlantForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">
+        <LoadingButton type="submit" className="w-full" loading={isLoading}>
           Cadastrar Usina
-        </Button>
+        </LoadingButton>
       </form>
     </Form>
   )

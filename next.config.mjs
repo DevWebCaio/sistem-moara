@@ -15,6 +15,22 @@ const nextConfig = {
     ],
     unoptimized: true,
   },
+  // PWA Configuration
+  async headers() {
+    return [
+      {
+        source: '/manifest.json',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/manifest+json',
+          },
+        ],
+      },
+    ]
+  },
+  // Compression
+  compress: true,
 };
 
 export default nextConfig;
