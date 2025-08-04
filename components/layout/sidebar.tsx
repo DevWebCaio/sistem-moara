@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Home, Package, Package2, Settings, Users2, Building, DollarSign, FileText, Zap, BarChart } from "lucide-react"
+import { Home, Package, Package2, Settings, Users2, Building, DollarSign, FileText, Zap, BarChart, Database, Activity } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
@@ -22,6 +22,18 @@ export function Sidebar({ userRole }: SidebarProps) {
     { href: "/financial", icon: DollarSign, label: "Financeiro", roles: ["admin"] },
     { href: "/crm", icon: Users2, label: "CRM", roles: ["admin"] },
     { href: "/reports", icon: BarChart, label: "Relatórios", roles: ["admin", "user"] },
+    {
+      title: "Energy Vault",
+      href: "/energy-vault",
+      icon: Database,
+      description: "Gestão de créditos energéticos",
+    },
+    {
+      title: "Monitoramento",
+      href: "/monitoring",
+      icon: Activity,
+      description: "Monitoramento SOLARMAN",
+    },
   ]
 
   const filteredNavItems = navItems.filter((item) => item.roles.includes(userRole))

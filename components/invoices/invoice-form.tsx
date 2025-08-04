@@ -1,67 +1,98 @@
 "use client"
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
 import { useState } from "react"
-
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
+import { Button } from "@/components/ui/button"
 import { LoadingButton } from "@/components/ui/loading-button"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { useToast } from "@/components/ui/use-toast"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useToast } from "@/hooks/use-toast"
+import { calculateTotalCredits } from "@/lib/energy-credits"
 
-const formSchema = z.object({
-  clientName: z.string().min(2, {
-    message: "O nome do cliente deve ter pelo menos 2 caracteres.",
-  }),
-  clientEmail: z.string().email({
-    message: "Email inválido.",
-  }),
-  amount: z.string().regex(/^\d+(\.\d{1,2})?$/, {
-    message: "O valor deve ser um número válido com até 2 casas decimais.",
-  }),
-  dueDate: z.string().min(1, {
-    message: "Data de vencimento é obrigatória.",
-  }),
-  status: z.enum(["Pendente", "Paga", "Vencida", "Cancelada"]),
-  description: z.string().optional(),
+const invoiceFormSchema = z.object({
+  clientName: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
+  clientEmail: z.string().email("Email inválido"),
+  amount: z.number().min(0.01, "Valor deve ser maior que zero"),
+  energyCredits: z.number().min(0, "Créditos energéticos devem ser maior ou igual a zero"),
+  dueDate: z.string().min(1, "Data de vencimento é obrigatória"),
+  status: z.enum(["pending", "paid", "overdue", "cancelled"]),
+  description: z.string().min(10, "Descrição deve ter pelo menos 10 caracteres"),
 })
 
-export default function InvoiceForm() {
-  const { toast } = useToast()
-  const [isLoading, setIsLoading] = useState(false)
+type InvoiceFormValues = z.infer<typeof invoiceFormSchema>
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+interface InvoiceFormProps {
+  onSuccess?: () => void
+  onCancel?: () => void
+}
+
+export function InvoiceForm({ onSuccess, onCancel }: InvoiceFormProps) {
+  const [isLoading, setIsLoading] = useState(false)
+  const { toast } = useToast()
+
+  const form = useForm<InvoiceFormValues>({
+    resolver: zodResolver(invoiceFormSchema),
     defaultValues: {
       clientName: "",
       clientEmail: "",
-      amount: "",
+      amount: 0,
+      energyCredits: 0,
       dueDate: "",
-      status: "Pendente",
+      status: "pending",
       description: "",
     },
   })
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  const onSubmit = async (data: InvoiceFormValues) => {
     setIsLoading(true)
+
     try {
-      // Simular delay de API
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      console.log(values)
-      toast({
-        title: "Fatura Gerada!",
-        description: `A fatura para "${values.clientName}" foi gerada com sucesso.`,
-        variant: "success",
+      // Simular chamada para API do Stripe
+      const response = await fetch("/api/invoices", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          customerName: data.clientName,
+          customerEmail: data.clientEmail,
+          amount: data.amount,
+          description: data.description,
+          dueDate: data.dueDate,
+          energyCredits: data.energyCredits,
+        }),
       })
-      form.reset()
-    } catch (error) {
+
+      if (!response.ok) {
+        throw new Error("Erro ao processar fatura")
+      }
+
+      const result = await response.json()
+
       toast({
-        title: "Erro!",
-        description: "Erro ao gerar fatura. Tente novamente.",
+        title: "Fatura criada com sucesso!",
+        description: `Fatura ${result.invoiceId} foi enviada para ${data.clientEmail}`,
+      })
+
+      form.reset()
+      onSuccess?.()
+    } catch (error) {
+      console.error("Erro ao criar fatura:", error)
+      toast({
+        title: "Erro ao criar fatura",
+        description: "Verifique os dados e tente novamente.",
         variant: "destructive",
       })
     } finally {
@@ -69,10 +100,17 @@ export default function InvoiceForm() {
     }
   }
 
+  const handleEmailChange = (email: string) => {
+    form.setValue("clientEmail", email)
+    // Buscar créditos energéticos do cliente
+    const credits = calculateTotalCredits(email)
+    form.setValue("energyCredits", credits)
+  }
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
             control={form.control}
             name="clientName"
@@ -94,15 +132,20 @@ export default function InvoiceForm() {
               <FormItem>
                 <FormLabel>Email do Cliente</FormLabel>
                 <FormControl>
-                  <Input placeholder="joao@email.com" {...field} />
+                  <Input 
+                    placeholder="joao@email.com" 
+                    {...field}
+                    onChange={(e) => handleEmailChange(e.target.value)}
+                  />
                 </FormControl>
+                <FormDescription>
+                  Créditos energéticos serão calculados automaticamente
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
-        </div>
 
-        <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
             name="amount"
@@ -110,8 +153,37 @@ export default function InvoiceForm() {
               <FormItem>
                 <FormLabel>Valor (R$)</FormLabel>
                 <FormControl>
-                  <Input placeholder="1000.00" {...field} />
+                  <Input 
+                    type="number" 
+                    step="0.01" 
+                    placeholder="0.00" 
+                    {...field}
+                    onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                  />
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="energyCredits"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Créditos Energéticos (kWh)</FormLabel>
+                <FormControl>
+                  <Input 
+                    type="number" 
+                    step="0.1" 
+                    placeholder="0.0" 
+                    {...field}
+                    onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Créditos disponíveis no cofre energético
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -130,49 +202,61 @@ export default function InvoiceForm() {
               </FormItem>
             )}
           />
-        </div>
 
-        <FormField
-          control={form.control}
-          name="status"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Status</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione o status" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="Pendente">Pendente</SelectItem>
-                  <SelectItem value="Paga">Paga</SelectItem>
-                  <SelectItem value="Vencida">Vencida</SelectItem>
-                  <SelectItem value="Cancelada">Cancelada</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name="status"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Status</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione o status" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="pending">Pendente</SelectItem>
+                    <SelectItem value="paid">Pago</SelectItem>
+                    <SelectItem value="overdue">Vencido</SelectItem>
+                    <SelectItem value="cancelled">Cancelado</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           control={form.control}
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Descrição (Opcional)</FormLabel>
+              <FormLabel>Descrição</FormLabel>
               <FormControl>
-                <Textarea placeholder="Detalhes sobre a fatura..." {...field} />
+                <Textarea 
+                  placeholder="Descrição detalhada da fatura, incluindo serviços e créditos energéticos..."
+                  className="min-h-[100px]"
+                  {...field} 
+                />
               </FormControl>
+              <FormDescription>
+                Inclua detalhes sobre os serviços prestados e créditos energéticos utilizados
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <LoadingButton type="submit" className="w-full" loading={isLoading}>
-          Gerar Fatura
-        </LoadingButton>
+        <div className="flex justify-end space-x-2">
+          <Button type="button" variant="outline" onClick={onCancel}>
+            Cancelar
+          </Button>
+          <LoadingButton type="submit" loading={isLoading}>
+            Gerar Fatura
+          </LoadingButton>
+        </div>
       </form>
     </Form>
   )
