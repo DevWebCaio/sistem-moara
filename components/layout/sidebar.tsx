@@ -18,25 +18,15 @@ export function Sidebar({ userRole }: SidebarProps) {
     { href: "/power-plants", icon: Zap, label: "Usinas Solares", roles: ["admin"] },
     { href: "/consumer-units", icon: Building, label: "Unidades Consumidoras", roles: ["admin"] },
     { href: "/contracts", icon: FileText, label: "Contratos", roles: ["admin", "user"] },
-    { href: "/energy-vault", icon: Package, label: "Energy Vault", roles: ["admin"] },
+    { href: "/energy-vault", icon: Database, label: "Cofre Energético", roles: ["admin"] },
+    { href: "/monitoring", icon: Activity, label: "Monitoramento", roles: ["admin"] },
     { href: "/financial", icon: DollarSign, label: "Financeiro", roles: ["admin"] },
+    { href: "/invoices", icon: FileText, label: "Faturas", roles: ["admin"] },
     { href: "/crm", icon: Users2, label: "CRM", roles: ["admin"] },
     { href: "/reports", icon: BarChart, label: "Relatórios", roles: ["admin", "user"] },
-    {
-      title: "Energy Vault",
-      href: "/energy-vault",
-      icon: Database,
-      description: "Gestão de créditos energéticos",
-    },
-    {
-      title: "Monitoramento",
-      href: "/monitoring",
-      icon: Activity,
-      description: "Monitoramento SOLARMAN",
-    },
   ]
 
-  const filteredNavItems = navItems.filter((item) => item.roles.includes(userRole))
+  const filteredNavItems = navItems.filter((item) => item.roles && item.roles.includes(userRole))
 
   return (
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">

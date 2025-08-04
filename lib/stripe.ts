@@ -1,8 +1,15 @@
 import Stripe from 'stripe'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-12-18.acacia',
-})
+// Verificar se estamos em modo demo
+const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+
+let stripe: Stripe | null = null
+
+if (!isDemoMode && process.env.STRIPE_SECRET_KEY) {
+  stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: '2024-12-18.acacia',
+  })
+}
 
 export default stripe
 

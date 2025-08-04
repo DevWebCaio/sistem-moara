@@ -7,6 +7,19 @@ export async function POST(request: NextRequest) {
     const body: InvoiceData = await request.json()
     const { customerEmail, customerName, amount, description, dueDate, energyCredits } = body
 
+    // Verificar se estamos em modo demo
+    const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+
+    if (isDemoMode || !stripe) {
+      // Simular resposta em modo demo
+      return NextResponse.json({
+        success: true,
+        invoiceId: `demo_inv_${Date.now()}`,
+        customerId: `demo_cust_${Date.now()}`,
+        message: 'Fatura criada e enviada com sucesso (modo demo)',
+      })
+    }
+
     // Criar customer no Stripe
     const customer = await stripe.customers.create({
       email: customerEmail,
@@ -68,6 +81,26 @@ export async function GET(request: NextRequest) {
         { success: false, error: 'Email do cliente é obrigatório' },
         { status: 400 }
       )
+    }
+
+    // Verificar se estamos em modo demo
+    const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+
+    if (isDemoMode || !stripe) {
+      // Retornar dados mock em modo demo
+      return NextResponse.json({
+        success: true,
+        invoices: [
+          {
+            id: 'demo_inv_1',
+            amount: 150.0,
+            status: 'paid',
+            dueDate: Math.floor(new Date().getTime() / 1000),
+            description: 'Fatura demo - Créditos Energéticos: 50 kWh',
+            energyCredits: '50',
+          },
+        ],
+      })
     }
 
     // Buscar invoices do cliente
